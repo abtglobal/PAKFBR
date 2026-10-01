@@ -19,16 +19,22 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-echo [1/4] Installing project dependencies...
-call npm install
-if %errorlevel% neq 0 (
-    echo [ERROR] npm install failed. Please check your internet connection.
-    pause
-    exit /b 1
+:: 2. Check and install core dependencies
+if not exist "node_modules\" (
+    echo [1/3] Installing core dependencies (one-time only)...
+    call npm install
+    if %errorlevel% neq 0 (
+        echo [ERROR] npm install failed. Please check your internet connection.
+        pause
+        exit /b 1
+    )
+) else (
+    echo [1/3] Core dependencies already installed. Skipping...
 )
 
+:: 3. Build production web assets
 echo.
-echo [2/4] Compiling optimized production web assets...
+echo [2/3] Compiling optimized web assets...
 call npm run build
 if %errorlevel% neq 0 (
     echo [ERROR] npm run build failed.
@@ -36,13 +42,15 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
+:: 4. Package into Windows Executable
 echo.
-echo [3/4] Installing packaging engine (Electron & electron-builder)...
-call npm install --save-dev electron electron-builder --legacy-peer-deps
+echo [3/3] Generating Windows Executable (.exe)...
+echo [INFO] Note: First-time packaging downloads the Electron Windows engine (~100MB).
+echo        Please wait 2-4 minutes depending on your internet connection...
+echo.
 
-echo.
-echo [4/4] Generating Windows Setup Installer (.exe) & Portable Executable...
-call npx electron-builder --win nsis portable
+:: Run electron-builder with increased timeout and verbose feedback
+call npx --yes electron-builder --win portable nsis
 
 if %errorlevel% equ 0 (
     echo.
@@ -52,15 +60,17 @@ if %errorlevel% equ 0 (
     echo  Files ready in the "dist-electron" folder:
     echo    1. Setup Installer (.exe)  - for full desktop installation & shortcuts
     echo    2. Portable (.exe)         - for instant 1-click run from USB flash drive
-    echo.
-    echo  You can copy either file to any Windows PC to run offline.
     echo ======================================================================
-    explorer dist-electron
+    if exist "dist-electron\" (
+        explorer dist-electron
+    )
 ) else (
     echo.
-    echo Notice: Compiling single-directory portable package...
-    call npx electron-builder --win --dir
-    explorer dist-electron
+    echo ======================================================================
+    echo  [NOTICE] If the GitHub download timed out due to slow internet:
+    echo  You can use the INSTANT launcher instead: "Launch-PakTax-Desktop.bat"
+    echo  It opens the app in a standalone desktop window with 0 wait time!
+    echo ======================================================================
 )
 
 echo.
