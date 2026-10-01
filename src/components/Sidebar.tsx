@@ -90,6 +90,7 @@ export function Sidebar({
   ];
 
   const systemLinks: Array<{ id: NavItem; label: string; icon: React.ReactNode }> = [
+    { id: 'DESKTOP_EXE', label: 'Desktop App & Offline', icon: <Monitor className="w-4 h-4 text-emerald-700" /> },
     { id: 'INTEGRATION', label: 'Integration Adapter', icon: <SettingsIcon className="w-4 h-4" /> },
     { id: 'AUDIT_LOG', label: 'Audit Log', icon: <History className="w-4 h-4" /> },
     { id: 'SETTINGS', label: 'Settings', icon: <Sliders className="w-4 h-4" /> },
@@ -286,9 +287,10 @@ interface HeaderProps {
   workspace: Workspace;
   onNewInvoice: () => void;
   onImportExcel: () => void;
+  onOpenDesktop: () => void;
 }
 
-export function Header({ currentTab, workspace, onNewInvoice, onImportExcel }: HeaderProps) {
+export function Header({ currentTab, workspace, onNewInvoice, onImportExcel, onOpenDesktop }: HeaderProps) {
   const titles: Record<NavItem, { title: string; subtitle: string }> = {
     DASHBOARD: { title: 'Compliance Dashboard', subtitle: 'Real-time overview of invoices, validation status, and FBR submissions' },
     INVOICES: { title: 'Tax Invoices Master & PDF', subtitle: 'Manage, search, validate, and download statutory PDF invoices' },
@@ -317,7 +319,15 @@ export function Header({ currentTab, workspace, onNewInvoice, onImportExcel }: H
         <p className="text-xs text-stone-600 hidden sm:block font-medium">{info.subtitle}</p>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2.5">
+        <button
+          onClick={onOpenDesktop}
+          className="px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold rounded-xl border border-emerald-300 transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
+          title="Install or run as standalone desktop application"
+        >
+          <Monitor className="w-3.5 h-3.5 text-emerald-700" />
+          <span>Desktop App</span>
+        </button>
         <button
           onClick={onImportExcel}
           className="px-3.5 py-2 bg-white hover:bg-stone-50 text-stone-800 text-xs font-semibold rounded-xl border border-stone-300 transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"

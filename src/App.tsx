@@ -153,6 +153,10 @@ export default function App() {
             setSelectedInvoiceId(null);
             setCurrentTab('IMPORT');
           }}
+          onOpenDesktop={() => {
+            setSelectedInvoiceId(null);
+            setCurrentTab('DESKTOP_EXE');
+          }}
         />
 
         <main className="flex-1 p-6 overflow-y-auto">
