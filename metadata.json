@@ -1,0 +1,6 @@
+{
+  "name": "PakTax FBR Invoicing Compliance Platform",
+  "description": "Enterprise-grade taxpayer compliance, Excel validation engine, and transformation platform for Pakistan FBR Digital Invoicing.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
